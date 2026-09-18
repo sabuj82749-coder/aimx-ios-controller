@@ -1,0 +1,16 @@
+# Keep the cheat PC controller PRIVATE: only the ios/ port gets published.
+# Every other file (Android source, the controller.html JS, docs) stays local.
+*
+!*.gitignore
+!ios/
+!ios/**
+!.github/
+!.github/workflows/
+!.github/workflows/build-ios.yml
+!.github/workflows/*
+!scripts/
+!scripts/*
+
+# CI lives at repo-root .github so GitHub Actions auto-detects it (workflow paths are root-relative: ios/...)
+!/.github/
+!/.github/**

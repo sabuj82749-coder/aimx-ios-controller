@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>AIM-X</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --bg-primary: #e8ecf4;
+            --bg-secondary: rgba(255, 255, 255, 0.55);
+            --bg-card: rgba(255, 255, 255, 0.62);
+            --text-primary: #12151f;
+            --text-secondary: #5a5f7a;
+            --text-muted: #9499b0;
+            --accent-blue: #5B6EF5;
+            --accent-green: #2ecc71;
+            --accent-red: #e74c4c;
+            --border-color: rgba(255, 255, 255, 0.8);
+            --glass-blur: blur(24px) saturate(180%);
+            --glass-blur-strong: blur(40px) saturate(200%);
+            --shadow-soft: 0 8px 32px rgba(91, 110, 245, 0.06);
+            --shadow-medium: 0 8px 32px rgba(91, 110, 245, 0.10);
+            --shadow-hover: 0 12px 40px rgba(91, 110, 245, 0.14);
+            --glow: 0 0 20px rgba(91, 110, 245, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body {
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(91, 110, 245, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(155, 89, 182, 0.07) 0%, transparent 50%),
+                linear-gradient(165deg, #e8ecf4 0%, #f0f3f9 40%, #f2f0f9 70%, #ece8f4 100%);
+            background-attachment: fixed;
+        }
+
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-blobs::before,
+        .bg-blobs::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+
+        .bg-blobs::before {
+            width: 300px;
+            height: 300px;
+            background: rgba(91, 110, 245, 0.12);
+            top: -80px;
+            right: -40px;
+        }
+
+        .bg-blobs::after {
+            width: 250px;
+            height: 250px;
+            background: rgba(46, 204, 113, 0.08);
+            bottom: 10%;
+            left: -60px;
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            padding: 60px 24px 20px 24px;
+            text-align: center;
+        }
+
+        .app-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #5B6EF5 0%, #7c5ce7 40%, #2ecc71 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-card {
+            margin: 0 24px 20px 24px;
+            background: var(--bg-card);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 20px;
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .status-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .status-badge {
+            background: rgba(148, 153, 176, 0.18);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.online {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--accent-green);
+            box-shadow: 0 0 12px rgba(46, 204, 113, 0.15);
+        }
+
+        .tab-nav {
+            margin: 0 24px 16px 24px;
+            background: var(--bg-card);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 14px;
+            padding: 4px;
+            display: flex;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 11px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #5B6EF5, #7c5ce7);
+            color: white;
+            box-shadow: 0 4px 16px rgba(91, 110, 245, 0.3);
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 24px;
+            padding-bottom: 100px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .control-section {
+            display: none;
+        }
+
+        .control-section.active {
+            display: block;
+        }
+
+        .section-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 24px 0 12px 0;
+        }
+
+        .setting-item {
+            background: var(--bg-card);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow 0.25s ease, transform 0.2s ease;
+        }
+
+        .setting-item:active {
+            transform: scale(0.985);
+        }
+
+        .setting-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .setting-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .setting-value {
+            color: var(--accent-blue);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toggle {
+            width: 46px;
+            height: 26px;
+            background: rgba(148, 153, 176, 0.3);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: linear-gradient(135deg, #5B6EF5, #7c5ce7);
+        }
+
+        .toggle-knob {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle.active .toggle-knob {
+            transform: translateX(20px);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #5B6EF5, #7c5ce7);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin: 8px 0;
+            box-shadow: 0 6px 20px rgba(91, 110, 245, 0.25);
+        }
+
+        .btn:hover {
+            box-shadow: 0 8px 28px rgba(91, 110, 245, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn.secondary {
+            background: var(--bg-card);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #e74c4c, #c0392b);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.25);
+        }
+
+        .dropdown {
+            position: relative;
+            width: 120px;
+        }
+
+        .dropdown-btn {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            z-index: 1000;
+            display: none;
+            margin-top: 6px;
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(91, 110, 245, 0.08);
+            color: var(--accent-blue);
+        }
+
+        .slider-container {
+            margin: 16px 0;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .slider-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .slider-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .slider {
+            width: 100%;
+            height: 5px;
+            background: rgba(148, 153, 176, 0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #5B6EF5, #7c5ce7);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(91, 110, 245, 0.35);
+        }
+
+        .bottom-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.72);
+            -webkit-backdrop-filter: var(--glass-blur-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0 20px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 -4px 24px rgba(91, 110, 245, 0.06);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-value.blue {
+            color: var(--accent-blue);
+        }
+
+        .toggle.disabled {
+            background: var(--accent-red);
+        }
+
+        .toggle.enabled {
+            background: var(--accent-green);
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        .status-text.enabled {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--accent-green);
+        }
+
+        .status-text.disabled {
+            background: rgba(231, 76, 60, 0.12);
+            color: var(--accent-red);
+        }
+
+        .keybind-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .keybind-key {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            min-width: 40px;
+            text-align: center;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+        }
+
+        .keybind-set-btn {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .keybind-set-btn:hover {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            background: rgba(91, 110, 245, 0.08);
+        }
+
+        .btn-toggle {
+            background: rgba(91, 110, 245, 0.08);
+            border: 1px solid rgba(91, 110, 245, 0.3);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-toggle:hover {
+            background: rgba(91, 110, 245, 0.15);
+            box-shadow: var(--glow);
+        }
+
+        .btn-toggle.enabled {
+            background: rgba(46, 204, 113, 0.15);
+            border-color: rgba(46, 204, 113, 0.4);
+            color: var(--accent-green);
+        }
+
+        .btn-toggle.disabled {
+            background: rgba(231, 76, 60, 0.12);
+            border-color: rgba(231, 76, 60, 0.3);
+            color: var(--accent-red);
+        }
+
+        .btn-toggle.refresh-btn {
+            background: linear-gradient(135deg, #e74c4c, #c0392b);
+            border-color: transparent;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.25);
+        }
+
+        .btn-toggle.refresh-btn:hover {
+            box-shadow: 0 6px 24px rgba(231, 76, 60, 0.35);
+        }
+
+        .btn-toggle.memory-init-btn {
+            background: linear-gradient(135deg, #e74c4c, #c0392b);
+            border-color: transparent;
+            color: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.25);
+        }
+
+        .btn-toggle.memory-init-btn:hover {
+            box-shadow: 0 6px 24px rgba(231, 76, 60, 0.35);
+        }
+
+        .btn-toggle.memory-init-btn.initializing {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 16px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-toggle.memory-init-btn.initializing:hover {
+            box-shadow: 0 6px 24px rgba(46, 204, 113, 0.4);
+        }
+
+        .brutality-btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .brutality-btn:hover {
+            border-color: rgba(91, 110, 245, 0.4);
+            color: var(--accent-blue);
+            background: rgba(91, 110, 245, 0.06);
+        }
+
+        .brutality-btn.active {
+            background: linear-gradient(135deg, #5B6EF5, #7c5ce7);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 16px rgba(91, 110, 245, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 153, 176, 0.25);
+            border-radius: 4px;
+        }
+
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.55) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 0 3px rgba(91, 110, 245, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-blobs"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="app-title">AIM-X CONTROLLER</div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="status-card">
+            <div class="status-header">
+                <div>
+                    <div class="status-title">Controller</div>
+                    <div class="status-subtitle">AIM-X</div>
+                </div>
+                <div class="status-badge" id="connectionStatus">OFFLINE</div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Main Tab Navigation -->
+            <div class="tab-nav" style="margin: 0 0 16px 0;">
+                <button class="tab-btn active" onclick="switchControlTab('aimbot')">Aimbot</button>
+                <button class="tab-btn" onclick="switchControlTab('esp')">ESP</button>
+            </div>
+
+            <!-- Aimbot Controls -->
+            <div id="aimbot-controls" class="control-section active">
+                <div class="section-header">AIMBOT CONFIGURATION</div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Status</div>
+                        <div class="setting-desc">Main aimbot toggle</div>
+                    </div>
+                    <div class="toggle" id="aimbotToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <!-- Simple Aimbot Type Selector -->
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Aimbot Type</div>
+                        <div class="setting-desc">Select targeting mode</div>
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-btn" onclick="toggleDropdown('aimbotType')">
+                            <span id="aimbotTypeText">None</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-menu" id="aimbotTypeMenu">
+                            <div class="dropdown-item" onclick="selectAimbotType('none')">None</div>
+                            <div class="dropdown-item" onclick="selectAimbotType('real')">Real</div>
+                            <div class="dropdown-item" onclick="selectAimbotType('fair')">Fair</div>
+                            <div class="dropdown-item" onclick="selectAimbotType('collider')">Collider</div>
+                            <div class="dropdown-item" onclick="selectAimbotType('external')">External</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fair Aimbot Controls -->
+                <div id="fairControls" class="hidden">
+                    <div class="section-header">FAIR BRUTALITY</div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                        <div class="brutality-btn active" id="brutalLow" onclick="setBrutality(0)">LOW</div>
+                        <div class="brutality-btn" id="brutalMid" onclick="setBrutality(1)">MID</div>
+                        <div class="brutality-btn" id="brutalHigh" onclick="setBrutality(2)">HIGH</div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">Target Body Part</div>
+                            <div class="setting-desc">Select aimbot target area</div>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-btn" onclick="toggleDropdown('fairTarget')">
+                                <span id="fairTargetText">Head</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="dropdown-menu" id="fairTargetMenu">
+                                <div class="dropdown-item" onclick="selectFairTarget('head')">Head</div>
+                                <div class="dropdown-item" onclick="selectFairTarget('neck')">Neck</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collider Aimbot Controls -->
+                <div id="colliderControls" class="hidden">
+                    <div class="section-header">COLLIDER CONFIGURATION</div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <div class="slider-label">Collider Delay</div>
+                            <div class="slider-value" id="colliderDelayValue">0ms</div>
+                        </div>
+                        <input type="range" class="slider" id="colliderDelaySlider" min="0" max="400" value="0"
+                            oninput="updateColliderDelay(this.value)">
+                    </div>
+                </div>
+
+                <!-- External Aimbot Controls -->
+                <div id="externalControls" class="hidden">
+                    <div class="section-header">EXTERNAL AIMBOT</div>
+
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">Aim on Head (ms)</div>
+                            <div class="setting-desc">Enter restoration time in milliseconds</div>
+                        </div>
+                        <input type="number" id="aimOnHeadInput" class="setting-input" min="50" max="500" value="100"
+                            onchange="updateAimOnHead(this.value)"
+                            style="border-radius: 10px; padding: 8px 12px; font-size: 14px; width: 80px; text-align: center;">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <div class="slider-label">Drag Threshold</div>
+                            <div class="slider-value" id="dragThresholdValue">5</div>
+                        </div>
+                        <input type="range" class="slider" id="dragThresholdSlider" min="1" max="20" value="5"
+                            oninput="updateDragThreshold(this.value)">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Sniper Scope</div>
+                        <div class="setting-desc">Enhanced precision mode</div>
+                    </div>
+                    <div class="toggle" id="sniperToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESP Controls -->
+            <div id="esp-controls" class="control-section">
+                <div class="section-header">ESP CONFIGURATION</div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">ESP Status</div>
+                        <div class="setting-desc">Visual indicators toggle</div>
+                    </div>
+                    <div class="toggle" id="espToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Box ESP</div>
+                        <div class="setting-desc">Player bounding boxes</div>
+                    </div>
+                    <div class="toggle" id="boxToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Lines ESP</div>
+                        <div class="setting-desc">Distance lines</div>
+                    </div>
+                    <div class="toggle" id="linesToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Health ESP</div>
+                        <div class="setting-desc">Health indicators</div>
+                    </div>
+                    <div class="toggle" id="healthToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Distance Info</div>
+                        <div class="setting-desc">Display distance to players</div>
+                    </div>
+                    <div class="toggle" id="distanceToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Info Box</div>
+                        <div class="setting-desc">Show player info boxes</div>
+                    </div>
+                    <div class="toggle" id="namesToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item" onclick="refreshEntity()">>
+                    <div class="setting-left">
+                        <div class="setting-title">Refresh Entity</div>
+                        <div class="setting-desc">Refresh game entities</div>
+                    </div>
+                    <div class="btn-toggle" id="refreshEntityBtn">
+                        REFRESH
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoring Tab -->
+            <div id="monitoring-tab" class="tab-content">
+                <div class="section-header">SYSTEM STATUS</div>
+
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-label">Connection</span>
+                        <span class="info-value" id="connectionInfo">Connected</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Architecture</span>
+                        <span class="info-value blue" id="archInfo">32-BIT</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Entities</span>
+                        <span class="info-value" id="entityCount">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Memory Status</span>
+                        <span class="info-value blue">Initialized</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">FPS</span>
+                        <span class="info-value blue">45</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="section-header">SYSTEM CONTROLS</div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">PC Bypass</div>
+                        <div class="setting-desc">Bypass PC security check</div>
+                    </div>
+                    <div class="btn-toggle disabled" id="bypassBtn" onclick="toggleBypass()">
+                        DISABLED
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Memory Initialization</div>
+                        <div class="setting-desc">Initialize game memory</div>
+                    </div>
+                    <div class="btn-toggle memory-init-btn" id="memoryInitBtn" onclick="initMemory()">
+                        INITIALIZE
+                    </div>
+                </div>
+
+                <div class="section-header">KEYBINDS SETUP</div>
+
+                <div class="setting-item">
+                    <div class="setting-left">
+                        <div class="setting-title">Keybinds Master</div>
+                        <div class="setting-desc">Enable custom keybinds</div>
+                    </div>
+                    <div class="btn-toggle disabled" id="keybindsBtn" onclick="toggleKeybinds()">
+                        DISABLED
+                    </div>
+                </div>
+
+                <div id="keybindsList" class="hidden">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">Aimbot Toggle</div>
+                            <div class="setting-desc">Key to toggle aimbot on/off</div>
+                        </div>
+                        <div class="keybind-selector">
+                            <div class="keybind-key" id="aimbotKey">None</div>
+                            <div class="keybind-set-btn" onclick="setKeybind('aimbot')">SET</div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">ESP Toggle</div>
+                            <div class="setting-desc">Key to toggle ESP on/off</div>
+                        </div>
+                        <div class="keybind-selector">
+                            <div class="keybind-key" id="espKey">None</div>
+                            <div class="keybind-set-btn" onclick="setKeybind('esp')">SET</div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">Sniper Scope</div>
+                            <div class="setting-desc">Key to toggle sniper scope</div>
+                        </div>
+                        <div class="keybind-selector">
+                            <div class="keybind-key" id="sniperKey">None</div>
+                            <div class="keybind-set-btn" onclick="setKeybind('sniper')">SET</div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-title">PC Bypass</div>
+                            <div class="setting-desc">Key to trigger PC bypass</div>
+                        </div>
+                        <div class="keybind-selector">
+                            <div class="keybind-key" id="bypassKey">None</div>
+                            <div class="keybind-set-btn" onclick="setKeybind('bypass')">SET</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header">CONFIGURATION</div>
+
+                <div class="setting-item" onclick="toggleArchitecture()">
+                    <div class="setting-left">
+                        <div class="setting-title">Architecture</div>
+                        <div class="setting-desc">Switch game architecture</div>
+                    </div>
+                    <div class="setting-value" id="archSetting">32-BIT</div>
+                </div>
+            </div>
+
+            <!-- Console Tab -->
+            <div id="console-tab" class="tab-content">
+                <div class="section-header">SYSTEM CONSOLE</div>
+
+                <div class="info-card" style="height: 400px; overflow-y: auto; font-family: monospace;">
+                    <div id="consoleOutput" style="font-size: 12px; line-height: 1.4;">
+                        <div>[12:00:00] AIM-X Controller initialized</div>
+                        <div>[12:00:01] Waiting for connection...</div>
+                    </div>
+                </div>
+
+                <button class="btn secondary" onclick="clearConsole()">
+                    <i class="fas fa-trash"></i> Clear Console
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchBottomTab('controls')">
+                <i class="fas fa-gamepad"></i>
+                <span>Controls</span>
+            </div>
+            <div class="nav-item" onclick="switchBottomTab('monitoring')">
+                <i class="fas fa-chart-line"></i>
+                <span>Status</span>
+            </div>
+            <div class="nav-item" onclick="switchBottomTab('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item" onclick="switchBottomTab('console')">
+                <i class="fas fa-terminal"></i>
+                <span>Console</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Polyfill for AndroidBridge
+        if (!window.AndroidBridge) {
+            window.AndroidBridge = {
+                sendStateToPC: function (state) { console.log('State sent:', state); },
+                onControlAction: function (action, value) { console.log('Action:', action, value); },
+                sendBypassRequest: function () { console.log('Bypass requested'); },
+                initializeMemory: function () { console.log('Memory init requested'); },
+                onPageLoaded: function () { console.log('Page loaded'); }
+            };
+        }
+
+        // State management
+        let gameState = {
+            aimbot: {
+                active: false, // FIXED: Changed from 'enabled' to 'active' to match MainActivity.kt
+                type: 'none', // Back to 'none' as default
+                fov: 12, // FOV field for aimbot
+                delay: 0,
+                sniperScope: false,
+                fairBrutality: 0, // 0=LOW, 1=MID, 2=HIGH
+                fairTargetBone: 0, // Target bone for fair aimbot
+                fairDelay: 6, // Fair delay field
+                colliderDelay: 0
+            },
+            externalAimbot: {
+                enabled: false,
+                aimOnHeadMs: 100,
+                dragDelay: 80,
+                dragThreshold: 5, // Drag threshold slider (1-20)
+                fov: 60,
+                distance: 200,
+                ignoreKnocked: true,
+                ignoreBots: false
+            },
+            esp: {
+                active: false, // FIXED: Changed from 'enabled' to 'active' to match MainActivity.kt
+                box: false,
+                lines: false,
+                health: false,
+                distance: false,
+                names: false,
+                info: false, // Added for ESP Info toggle
+                maxDistance: 200,
+                color: 'red'
+            },
+            systemControls: {
+                bypass: false,
+                memory: false,
+                entity: false,
+                memoryInitializing: false // Track memory initialization state
+            },
+            keybinds: {
+                enabled: false,
+                keys: {
+                    aimbot: 'None',
+                    esp: 'None',
+                    sniper: 'None',
+                    bypass: 'None'
+                }
+            },
+            connection: 'OFFLINE',
+            architecture: '32'
+        };
+
+        // Track current control tab to fix the bug
+        let currentControlTab = 'aimbot';
+
+        // Tab switching for main content (Aimbot/ESP at top)
+        function switchControlTab(tabName) {
+            console.log('Switching to tab:', tabName);
+
+            // Remember the current control tab
+            currentControlTab = tabName;
+
+            // Update control tab buttons
+            document.querySelector('.content .tab-nav').querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update control sections - use 'active' class instead of '#1'
+            document.querySelectorAll('.control-section').forEach(section => {
+                section.classList.remove('active');
+                console.log('Deactivated section:', section.id);
+            });
+
+            const targetSection = document.getElementById(tabName + '-controls');
+            if (targetSection) {
+                targetSection.classList.add('active');
+                console.log('Activated section:', targetSection.id);
+            } else {
+                console.log('Section not found:', tabName + '-controls');
+            }
+
+            log(`Switched to ${tabName.toUpperCase()} controls`);
+        }
+
+        // Tab switching for bottom navigation (Controls/Monitoring/Settings/Console)
+        function switchBottomTab(tabName) {
+            // Update bottom nav buttons
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tabName === 'controls') {
+                // Show the main content with Aimbot/ESP tabs
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.querySelector('.content .tab-nav').style.display = 'flex';
+
+                // FIXED: Restore the last selected control tab instead of always defaulting to aimbot
+                document.querySelectorAll('.control-section').forEach(section => section.classList.remove('active'));
+                document.getElementById(currentControlTab + '-controls').classList.add('active');
+
+                // Also update the control tab button states
+                document.querySelector('.content .tab-nav').querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent.toLowerCase() === currentControlTab) {
+                        btn.classList.add('active');
+                    }
+                });
+
+            } else {
+                // Show specific tab content and hide the Aimbot/ESP nav
+                document.querySelector('.content .tab-nav').style.display = 'none';
+                document.querySelectorAll('.control-section').forEach(section => section.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(tabName + '-tab').classList.add('active');
+            }
+
+            log(`Switched to ${tabName.toUpperCase()}`);
+        }
+
+        // Toggle functions
+        function setupToggle(id, stateKey, subKey) {
+            const toggle = document.getElementById(id);
+            if (!toggle) return;
+
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+                const isActive = toggle.classList.contains('active');
+
+                if (subKey) {
+                    gameState[stateKey][subKey] = isActive;
+                } else {
+                    gameState[stateKey] = isActive;
+                }
+
+                log(`${id} ${isActive ? 'ENABLED' : 'DISABLED'}`);
+                sendState();
+            });
+        }
+
+        // Setup all toggles
+        setupToggle('aimbotToggle', 'aimbot', 'active'); // FIXED: Changed to 'active'
+        setupToggle('sniperToggle', 'aimbot', 'sniperScope');
+        setupToggle('espToggle', 'esp', 'active'); // FIXED: Changed to 'active'
+        setupToggle('boxToggle', 'esp', 'box');
+        setupToggle('linesToggle', 'esp', 'lines');
+        setupToggle('healthToggle', 'esp', 'health');
+        setupToggle('distanceToggle', 'esp', 'distance');
+        // namesToggle handled separately below
+
+        // Special handler for Info Box toggle - enables info box above enemy head
+        document.getElementById('namesToggle').addEventListener('click', function () {
+            const toggle = this;
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+
+            gameState.esp.info = isActive;
+
+            log(`Info Box ${isActive ? 'ENABLED' : 'DISABLED'}`);
+            sendState();
+        });
+
+        // Dropdown functions
+        function toggleDropdown(id) {
+            const menu = document.getElementById(id + 'Menu');
+            if (menu) {
+                menu.classList.toggle('active');
+            }
+        }
+
+        function selectAimbotType(type) {
+            gameState.aimbot.type = type;
+            const textEl = document.getElementById('aimbotTypeText');
+            if (textEl) {
+                textEl.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+            }
+            const menu = document.getElementById('aimbotTypeMenu');
+            if (menu) {
+                menu.classList.remove('active');
+            }
+
+            // Auto-enable aimbot when a valid type is selected (not 'none')
+            if (type !== 'none') {
+                const aimbotToggle = document.getElementById('aimbotToggle');
+                if (aimbotToggle && !aimbotToggle.classList.contains('active')) {
+                    aimbotToggle.classList.add('active');
+                    gameState.aimbot.active = true; // FIXED: Changed to 'active'
+                    log(`Aimbot automatically enabled with ${type.toUpperCase()} type`);
+                }
+            } else {
+                // If 'none' is selected, disable aimbot
+                const aimbotToggle = document.getElementById('aimbotToggle');
+                if (aimbotToggle && aimbotToggle.classList.contains('active')) {
+                    aimbotToggle.classList.remove('active');
+                    gameState.aimbot.active = false; // FIXED: Changed to 'active'
+                    log(`Aimbot disabled (type set to NONE)`);
+                }
+            }
+
+            // Show/hide specific controls based on aimbot type
+            showAimbotControls(type);
+
+            log(`Aimbot type set to ${type.toUpperCase()}`);
+            sendState();
+        }
+
+        function selectFairTarget(target) {
+            gameState.aimbot.fairTargetBone = target === 'head' ? 0 : 1; // 0=head, 1=neck
+            const textEl = document.getElementById('fairTargetText');
+            if (textEl) {
+                textEl.textContent = target.charAt(0).toUpperCase() + target.slice(1);
+            }
+            const menu = document.getElementById('fairTargetMenu');
+            if (menu) {
+                menu.classList.remove('active');
+            }
+
+            log(`Fair aimbot target set to ${target.toUpperCase()}`);
+            sendState();
+        }
+
+        function showAimbotControls(type) {
+            // Hide all advanced controls first
+            document.getElementById('fairControls').classList.add('hidden');
+            document.getElementById('colliderControls').classList.add('hidden');
+            document.getElementById('externalControls').classList.add('hidden');
+
+            // Show controls based on type
+            switch (type) {
+                case 'fair':
+                    document.getElementById('fairControls').classList.remove('hidden');
+                    break;
+                case 'collider':
+                    document.getElementById('colliderControls').classList.remove('hidden');
+                    break;
+                case 'external':
+                    document.getElementById('externalControls').classList.remove('hidden');
+                    break;
+                case 'none':
+                default:
+                    // All controls remain hidden for 'none' or invalid types
+                    break;
+            }
+        }
+
+        // Fair Aimbot Brutality
+        function setBrutality(level) {
+            gameState.aimbot.fairBrutality = level;
+
+            // Update button states
+            document.querySelectorAll('.brutality-btn').forEach(btn => btn.classList.remove('active'));
+
+            if (level === 0) document.getElementById('brutalLow').classList.add('active');
+            else if (level === 1) document.getElementById('brutalMid').classList.add('active');
+            else if (level === 2) document.getElementById('brutalHigh').classList.add('active');
+
+            const names = ['LOW', 'MID', 'HIGH'];
+            log(`Fair brutality set to ${names[level]}`);
+            sendState();
+        }
+
+        // Collider Aimbot Controls
+        function updateColliderDelay(value) {
+            gameState.aimbot.colliderDelay = parseInt(value);
+            document.getElementById('colliderDelayValue').textContent = value + 'ms';
+            sendState();
+        }
+
+        // External Aimbot Controls
+        function updateAimOnHead(value) {
+            const numValue = parseInt(value);
+            if (isNaN(numValue) || numValue < 50 || numValue > 500) {
+                log('Invalid aim head value. Must be between 50-500ms');
+                return;
+            }
+            gameState.externalAimbot.aimOnHeadMs = numValue;
+            log(`Aim on Head set to ${numValue}ms`);
+            sendState();
+        }
+
+        function updateDragThreshold(value) {
+            gameState.externalAimbot.dragThreshold = parseInt(value);
+            document.getElementById('dragThresholdValue').textContent = value;
+            log(`Drag Threshold set to ${value}`);
+            sendState();
+        }
+
+        // ESP Functions - removed updateEspDistance and selectEspColor since controls were removed
+
+        // Slider functions
+        function updateDelay(value) {
+            gameState.aimbot.delay = parseInt(value);
+            const delayValue = document.getElementById('delayValue');
+            if (delayValue) {
+                delayValue.textContent = value + 'ms';
+            }
+            sendState();
+        }
+        function updateDelay(value) {
+            gameState.aimbot.delay = parseInt(value);
+            const delayValue = document.getElementById('delayValue');
+            if (delayValue) {
+                delayValue.textContent = value + 'ms';
+            }
+            sendState();
+        }
+
+        // System control toggle functions
+        function toggleBypass() {
+            const btn = document.getElementById('bypassBtn');
+            const isEnabled = btn.classList.contains('enabled');
+
+            if (isEnabled) {
+                btn.classList.remove('enabled');
+                btn.classList.add('disabled');
+                btn.textContent = 'DISABLED';
+                gameState.systemControls.bypass = false;
+            } else {
+                btn.classList.remove('disabled');
+                btn.classList.add('enabled');
+                btn.textContent = 'ENABLED';
+                gameState.systemControls.bypass = true;
+                bypassPC();
+            }
+
+            log(`PC Bypass ${isEnabled ? 'DISABLED' : 'ENABLED'}`);
+            sendState();
+        }
+
+        // Keybinds functions
+        function toggleKeybinds() {
+            const btn = document.getElementById('keybindsBtn');
+            const keybimdsList = document.getElementById('keybindsList');
+            const isEnabled = btn.classList.contains('enabled');
+
+            if (isEnabled) {
+                btn.classList.remove('enabled');
+                btn.classList.add('disabled');
+                btn.textContent = 'DISABLED';
+                keybimdsList.classList.add('hidden');
+                gameState.keybinds.enabled = false;
+            } else {
+                btn.classList.remove('disabled');
+                btn.classList.add('enabled');
+                btn.textContent = 'ENABLED';
+                keybimdsList.classList.remove('hidden');
+                gameState.keybinds.enabled = true;
+            }
+
+            log(`Keybinds ${isEnabled ? 'DISABLED' : 'ENABLED'}`);
+            sendState();
+        }
+
+        let currentKeybindSetting = null;
+
+        function setKeybind(type) {
+            currentKeybindSetting = type;
+            const button = event.target;
+            button.textContent = 'PRESS KEY';
+            button.style.background = 'var(--accent-blue)';
+            button.style.color = 'white';
+
+            log(`Press any key to set ${type} keybind...`);
+
+            // Listen for next keypress
+            document.addEventListener('keydown', handleKeybindSet, { once: true });
+        }
+
+        function handleKeybindSet(event) {
+            if (!currentKeybindSetting) return;
+
+            const key = event.key;
+            const keyDisplay = key.length === 1 ? key.toUpperCase() : key;
+
+            gameState.keybinds.keys[currentKeybindSetting] = keyDisplay;
+            document.getElementById(currentKeybindSetting + 'Key').textContent = keyDisplay;
+
+            // Reset button
+            const buttons = document.querySelectorAll('.keybind-set-btn');
+            buttons.forEach(btn => {
+                btn.textContent = 'SET';
+                btn.style.background = 'var(--bg-secondary)';
+                btn.style.color = 'var(--text-secondary)';
+            });
+
+            log(`${currentKeybindSetting} keybind set to ${keyDisplay}`);
+            currentKeybindSetting = null;
+            sendState();
+        }
+
+        // Architecture toggle
+        function toggleArchitecture() {
+            gameState.architecture = gameState.architecture === '32' ? '64' : '32';
+            const text = gameState.architecture + '-BIT';
+            const archSetting = document.getElementById('archSetting');
+            const archInfo = document.getElementById('archInfo');
+
+            if (archSetting) archSetting.textContent = text;
+            if (archInfo) archInfo.textContent = text;
+
+            log(`Architecture switched to ${text}`);
+            sendState();
+        }
+
+        // Action functions
+        function refreshESP() {
+            log('ESP refresh requested');
+            if (window.AndroidBridge && window.AndroidBridge.onControlAction) {
+                window.AndroidBridge.onControlAction('refresh_esp', '');
+            }
+        }
+
+        function bypassPC() {
+            log('PC bypass requested');
+            if (window.AndroidBridge && window.AndroidBridge.sendBypassRequest) {
+                window.AndroidBridge.sendBypassRequest();
+            }
+        }
+
+        function initMemory() {
+            const btn = document.getElementById('memoryInitBtn');
+
+            if (gameState.systemControls.memoryInitializing) {
+                log('Memory initialization already in progress...');
+                return;
+            }
+
+            // Start initialization - turn button green
+            gameState.systemControls.memoryInitializing = true;
+            btn.classList.add('initializing');
+            btn.textContent = 'INITIALIZING...';
+            btn.style.pointerEvents = 'none'; // Disable clicking during init
+
+            log('Memory initialization started - button now GREEN');
+
+            if (window.AndroidBridge && window.AndroidBridge.onControlAction) {
+                // Send memory_init action (action code 0x5) to force rescan
+                window.AndroidBridge.onControlAction('memory_init', '');
+            }
+
+            // Auto-reset to red after successful completion (simulate completion after logs)
+            // This will be overridden by actual completion detection if implemented
+            setTimeout(() => {
+                if (gameState.systemControls.memoryInitializing) {
+                    completeMemoryInit();
+                }
+            }, 10000); // 10 second timeout fallback
+        }
+
+        function completeMemoryInit() {
+            const btn = document.getElementById('memoryInitBtn');
+
+            // Reset to red state
+            gameState.systemControls.memoryInitializing = false;
+            btn.classList.remove('initializing');
+            btn.textContent = 'INITIALIZE';
+            btn.style.pointerEvents = 'auto'; // Re-enable clicking
+
+            log('Memory initialization completed - button now RED');
+        }
+
+        // Function to detect memory init completion from logs
+        function checkMemoryInitCompletion(logMessage) {
+            if (gameState.systemControls.memoryInitializing) {
+                // Check for completion indicators in logs
+                if (logMessage.includes('Memory init') &&
+                    (logMessage.includes('completed') ||
+                        logMessage.includes('success') ||
+                        logMessage.includes('done') ||
+                        logMessage.includes('Event ID 8') ||
+                        logMessage.includes('cleared'))) {
+
+                    // Add small delay to ensure all cleanup is done
+                    setTimeout(() => {
+                        completeMemoryInit();
+                    }, 2000);
+                }
+            }
+        }
+
+        function refreshEntity() {
+            log('Entity refresh requested');
+            if (window.AndroidBridge && window.AndroidBridge.onControlAction) {
+                window.AndroidBridge.onControlAction('refresh_entities', '');
+            }
+        }
+
+        function clearConsole() {
+            const output = document.getElementById('consoleOutput');
+            if (output) {
+                output.innerHTML = '';
+                // Silent clear - no log message shown
+            }
+        }
+
+        // Console logging
+        function log(message) {
+            const now = new Date();
+            const time = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+            const line = document.createElement('div');
+            line.textContent = `${time} ${message}`;
+
+            const output = document.getElementById('consoleOutput');
+            if (output) {
+                output.appendChild(line);
+                output.scrollTop = output.scrollHeight;
+
+                // Keep only last 100 lines
+                while (output.children.length > 100) {
+                    output.removeChild(output.children[0]);
+                }
+            }
+
+            // Check for memory initialization completion
+            checkMemoryInitCompletion(message);
+        }
+
+        // State sender
+        function sendState() {
+            if (window.AndroidBridge && window.AndroidBridge.sendStateToPC) {
+                window.AndroidBridge.sendStateToPC(JSON.stringify(gameState));
+            }
+        }
+
+        // Connection status updater
+        window.setWifiConnectionStatus = function (status, ip) {
+            const badge = document.getElementById('connectionStatus');
+            const info = document.getElementById('connectionInfo');
+
+            gameState.connection = status;
+
+            if (status === 'CONNECTED') {
+                if (badge) {
+                    badge.textContent = 'ONLINE';
+                    badge.className = 'status-badge online';
+                }
+                if (info) {
+                    info.textContent = 'Connected' + (ip ? ` (${ip})` : '');
+                }
+            } else if (status === 'CONNECTING') {
+                if (badge) {
+                    badge.textContent = 'CONNECTING';
+                    badge.className = 'status-badge';
+                }
+                if (info) {
+                    info.textContent = 'Connecting...';
+                }
+            } else {
+                if (badge) {
+                    badge.textContent = 'OFFLINE';
+                    badge.className = 'status-badge';
+                }
+                if (info) {
+                    info.textContent = 'Disconnected';
+                }
+            }
+
+            log(`Connection status: ${status}`);
+        };
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+            }
+        });
+
+        // Initialize
+        window.onload = function () {
+            log('AIM-X Controller initialized');
+
+            // Hide all aimbot controls initially since default type is 'none'
+            showAimbotControls('none');
+
+            if (window.AndroidBridge && window.AndroidBridge.onPageLoaded) {
+                window.AndroidBridge.onPageLoaded();
+            }
+
+            // Send initial state
+            setTimeout(() => {
+                sendState();
+            }, 1000);
+        };
+
+        // Show controller function for MainActivity
+        window.showController = function () {
+            log('Controller interface ready');
+        };
+
+        // Global function to signal memory init completion from external sources
+        window.onMemoryInitComplete = function (success) {
+            if (success) {
+                log('Memory initialization completed successfully');
+            } else {
+                log('Memory initialization failed');
+            }
+            completeMemoryInit();
+        };
+
+        // Global function to receive log messages from external sources
+        window.onExternalLog = function (message) {
+            log(message);
+        };
+    </script>
+</body>
+
+</html>

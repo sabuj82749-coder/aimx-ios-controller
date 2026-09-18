@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		000000000000000000000201 /* AIMXControllerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000101 /* AIMXControllerApp.swift */; };
+		000000000000000000000202 /* ConnectionAndScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000102 /* ConnectionAndScreen.swift */; };
+		000000000000000000000203 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000103 /* MainViewModel.swift */; };
+		000000000000000000000204 /* PCConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000104 /* PCConnectionManager.swift */; };
+		000000000000000000000205 /* LANScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000105 /* LANScanner.swift */; };
+		000000000000000000000206 /* LocalIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000106 /* LocalIP.swift */; };
+		000000000000000000000207 /* PacketEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000107 /* PacketEncoder.swift */; };
+		000000000000000000000208 /* UDPBroadcastListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000108 /* UDPBroadcastListener.swift */; };
+		000000000000000000000209 /* ConnectScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000109 /* ConnectScreenView.swift */; };
+		00000000000000000000020A /* ControllerWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010A /* ControllerWebView.swift */; };
+		00000000000000000000020B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010B /* RootView.swift */; };
+		00000000000000000000020C /* NativeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010C /* NativeBridge.swift */; };
+		00000000000000000000020D /* controller.html in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010D /* controller.html */; };
+		00000000000000000000020E /* bridge_shim.js in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010E /* bridge_shim.js */; };
+		00000000000000000000020F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000010F /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0000000000000000000000EE /* AimXController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AimXController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000101 /* AIMXControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIMXControllerApp.swift; sourceTree = "<group>"; };
+		000000000000000000000102 /* ConnectionAndScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionAndScreen.swift; sourceTree = "<group>"; };
+		000000000000000000000103 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		000000000000000000000104 /* PCConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCConnectionManager.swift; sourceTree = "<group>"; };
+		000000000000000000000105 /* LANScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LANScanner.swift; sourceTree = "<group>"; };
+		000000000000000000000106 /* LocalIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalIP.swift; sourceTree = "<group>"; };
+		000000000000000000000107 /* PacketEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketEncoder.swift; sourceTree = "<group>"; };
+		000000000000000000000108 /* UDPBroadcastListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPBroadcastListener.swift; sourceTree = "<group>"; };
+		000000000000000000000109 /* ConnectScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectScreenView.swift; sourceTree = "<group>"; };
+		00000000000000000000010A /* ControllerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControllerWebView.swift; sourceTree = "<group>"; };
+		00000000000000000000010B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		00000000000000000000010C /* NativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeBridge.swift; sourceTree = "<group>"; };
+		00000000000000000000010D /* controller.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = controller.html; sourceTree = "<group>"; };
+		00000000000000000000010E /* bridge_shim.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bridge_shim.js; sourceTree = "<group>"; };
+		00000000000000000000010F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		000000000000000000000302 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		000000000000000000000500 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000501 /* AimXController */,
+				00000000000000000000050A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000000501 /* AimXController */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000502 /* App */,
+				000000000000000000000503 /* Models */,
+				000000000000000000000504 /* ViewModels */,
+				000000000000000000000505 /* Network */,
+				000000000000000000000506 /* Views */,
+				000000000000000000000507 /* Web */,
+				000000000000000000000508 /* Resources */,
+				000000000000000000000509 /* Bundle */,
+			);
+			path = AimXController;
+			sourceTree = "<group>";
+		};
+		000000000000000000000502 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000101 /* AIMXControllerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		000000000000000000000503 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000102 /* ConnectionAndScreen.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		000000000000000000000504 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000103 /* MainViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		000000000000000000000505 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000104 /* PCConnectionManager.swift */,
+				000000000000000000000105 /* LANScanner.swift */,
+				000000000000000000000106 /* LocalIP.swift */,
+				000000000000000000000107 /* PacketEncoder.swift */,
+				000000000000000000000108 /* UDPBroadcastListener.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		000000000000000000000506 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000109 /* ConnectScreenView.swift */,
+				00000000000000000000010A /* ControllerWebView.swift */,
+				00000000000000000000010B /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		000000000000000000000507 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				00000000000000000000010C /* NativeBridge.swift */,
+				00000000000000000000010E /* bridge_shim.js */,
+			);
+			path = Web;
+			sourceTree = "<group>";
+		};
+		000000000000000000000508 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00000000000000000000010F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		000000000000000000000509 /* Bundle */ = {
+			isa = PBXGroup;
+			children = (
+				00000000000000000000010D /* controller.html */,
+			);
+			path = Bundle;
+			sourceTree = "<group>";
+		};
+		00000000000000000000050A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0000000000000000000000EE /* AimXController.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0000000000000000000000CC /* AimXController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000000000000000000402 /* Build configuration list for PBXNativeTarget "AimXController" */;
+			buildPhases = (
+				000000000000000000000301 /* Sources */,
+				000000000000000000000302 /* Frameworks */,
+				000000000000000000000303 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AimXController;
+			productName = AimXController;
+			productReference = 0000000000000000000000EE /* AimXController.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0000000000000000000000AA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					0000000000000000000000CC = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 000000000000000000000401 /* Build configuration list for PBXProject "AimXController" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 000000000000000000000500;
+			productRefGroup = 00000000000000000000050A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0000000000000000000000CC /* AimXController */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		000000000000000000000303 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000000000000000020D /* controller.html in Resources */,
+				00000000000000000000020E /* bridge_shim.js in Resources */,
+				00000000000000000000020F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		000000000000000000000301 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				000000000000000000000201 /* AIMXControllerApp.swift in Sources */,
+				000000000000000000000202 /* ConnectionAndScreen.swift in Sources */,
+				000000000000000000000203 /* MainViewModel.swift in Sources */,
+				000000000000000000000204 /* PCConnectionManager.swift in Sources */,
+				000000000000000000000205 /* LANScanner.swift in Sources */,
+				000000000000000000000206 /* LocalIP.swift in Sources */,
+				000000000000000000000207 /* PacketEncoder.swift in Sources */,
+				000000000000000000000208 /* UDPBroadcastListener.swift in Sources */,
+				000000000000000000000209 /* ConnectScreenView.swift in Sources */,
+				00000000000000000000020A /* ControllerWebView.swift in Sources */,
+				00000000000000000000020B /* RootView.swift in Sources */,
+				00000000000000000000020C /* NativeBridge.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		000000000000000000000410 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		000000000000000000000411 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		000000000000000000000412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AimXController/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.aimx.controller;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		000000000000000000000413 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AimXController/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = co.aimx.controller;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		000000000000000000000401 /* Build configuration list for PBXProject "AimXController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000000000000000000000410 /* Debug */,
+				000000000000000000000411 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		000000000000000000000402 /* Build configuration list for PBXNativeTarget "AimXController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000000000000000000000412 /* Debug */,
+				000000000000000000000413 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0000000000000000000000AA /* Project object */;
+}
