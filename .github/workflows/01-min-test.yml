@@ -1,0 +1,11 @@
+name: mini-probe
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: macos-14
+    steps:
+      - name: hello
+        run: echo "probe ok"
