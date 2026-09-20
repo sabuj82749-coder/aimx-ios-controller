@@ -371,7 +371,6 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AimXController/Resources/Info.plist;
-				CODE_SIGN_ENTITLEMENTS = AimXController/Resources/Entitlements.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -396,7 +395,6 @@
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AimXController/Resources/Info.plist;
-				CODE_SIGN_ENTITLEMENTS = AimXController/Resources/Entitlements.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
