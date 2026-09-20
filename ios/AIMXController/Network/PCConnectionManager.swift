@@ -14,6 +14,7 @@ final class PCConnectionManager {
 
     private var connection: NWConnection?
     private let queue = DispatchQueue(label: "pc.tcp.connection")
+    private let bufferQueue = DispatchQueue(label: "pc.tcp.buffer")
     private var receiveBuffer = Data()
 
     private var retryWork: DispatchWorkItem?
@@ -30,6 +31,11 @@ final class PCConnectionManager {
 
     // MARK: - Lifecycle
 
+    /// Tracks the current connection generation to make async callbacks (timeout
+    /// timers, state handlers, reconnects) immune to interleaving across
+    /// disconnect/connect cycles.
+    private var connectionEra: UInt64 = 0
+
     func disconnect() {
         retryWork?.cancel()
         connectTimeoutWork?.cancel()
@@ -38,9 +44,13 @@ final class PCConnectionManager {
         connectTimeoutWork = nil
         reconnectAfterDrop = nil
 
+        connectionEra += 1
+
+        // Capture + cancel locally: `.failed`/`.cancelled` state handlers run on
+        // the network queue and may call back concurrently from the UI thread.
         connection?.cancel()
         connection = nil
-        receiveBuffer.removeAll()
+        bufferQueue.sync { receiveBuffer.removeAll() }
 
         setState(.disconnected, ip: nil)
     }
@@ -53,6 +63,8 @@ final class PCConnectionManager {
         }
 
         disconnect()
+        connectionEra += 1
+        let era = connectionEra
         setState(.connecting, ip: nil)
         onLog?("Connecting to TCP: \(ip) ...")
 
@@ -63,8 +75,10 @@ final class PCConnectionManager {
         )
         self.connection = connection
 
-        connection.stateUpdateHandler = { [weak self] state in
-            guard let self = self else { return }
+        connection.stateUpdateHandler = { [weak self, weak connection] state in
+            guard let self = self, let connection = connection else { return }
+            // Ignore events from superseded connections (a newer connect() won).
+            guard self.connection === connection, self.connectionEra == era else { return }
             switch state {
             case .ready:
                 self.connectTimeoutWork?.cancel()
@@ -84,7 +98,8 @@ final class PCConnectionManager {
 
         // 5 s connect timeout, mirroring Android's 5000 ms socket.connect().
         let timeout = DispatchWorkItem { [weak self] in
-            guard let self = self, self.connectionState == .connecting else { return }
+            guard let self = self, self.connectionEra == era else { return }
+            guard self.connectionState == .connecting else { return }
             self.onLog?("TCP connection timed out.")
             self.teardownAndReconnect(errorDescription: "Connect timed out")
         }
@@ -161,7 +176,7 @@ final class PCConnectionManager {
                 return
             }
             if let data = data {
-                self.receiveBuffer.append(data)
+                bufferQueue.sync { self.receiveBuffer.append(data) }
                 self.emitLines()
             }
             if let error = error {
@@ -178,12 +193,20 @@ final class PCConnectionManager {
     }
 
     private func emitLines() {
-        while let newlineIndex = receiveBuffer.firstIndex(of: 0x0A) {
-            let lineData = receiveBuffer[receiveBuffer.startIndex..<newlineIndex]
-            receiveBuffer.removeSubrange(receiveBuffer.startIndex...newlineIndex)
-            let line = String(decoding: lineData, as: UTF8.self)
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !line.isEmpty else { continue }
+        let lines: [String] = bufferQueue.sync { () -> [String] in
+            var result: [String] = []
+            while let newlineIndex = receiveBuffer.firstIndex(of: 0x0A) {
+                let lineData = receiveBuffer[receiveBuffer.startIndex..<newlineIndex]
+                receiveBuffer.removeSubrange(receiveBuffer.startIndex...newlineIndex)
+                let line = String(decoding: lineData, as: UTF8.self)
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                if !line.isEmpty {
+                    result.append(line)
+                }
+            }
+            return result
+        }
+        for line in lines {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.onLog?("Recv: \(line)")
@@ -194,11 +217,14 @@ final class PCConnectionManager {
 
     private func teardownAndReconnect(errorDescription: String) {
         reconnectAfterDrop?.cancel()
+        let era = connectionEra
         let wasConnected = connectionState == .connected
 
-        connection?.cancel()
-        connection = nil
-        receiveBuffer.removeAll()
+        if self.connectionEra == era {
+            connection?.cancel()
+            connection = nil
+            bufferQueue.sync { receiveBuffer.removeAll() }
+        }
 
         if wasConnected {
             setState(.disconnected, ip: nil)
@@ -206,7 +232,8 @@ final class PCConnectionManager {
 
             // Wait 2 s before reconnecting, mirroring Android.
             let work = DispatchWorkItem { [weak self] in
-                guard let self = self, self.connectionState == .disconnected else { return }
+                guard let self = self, self.connectionEra == era else { return }
+                guard self.connectionState == .disconnected else { return }
                 self.onLog?("Attempting reconnection...")
                 self.connect()
             }
@@ -218,6 +245,19 @@ final class PCConnectionManager {
     }
 
     private func setState(_ state: ConnectionState, ip: String?) {
+        // stateUpdateHandler / receive callbacks run on the network queue; hop to
+        // main so @Published mutations happen on the UI thread (otherwise SwiftUI
+        // crashes on background thread drift once the link drops).
+        if Thread.isMainThread {
+            applyState(state, ip: ip)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.applyState(state, ip: ip)
+            }
+        }
+    }
+
+    private func applyState(_ state: ConnectionState, ip: String?) {
         if connectionState == state { return }
         connectionState = state
         onStatusChange?(state, ip)

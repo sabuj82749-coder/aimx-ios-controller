@@ -81,6 +81,10 @@ final class MainViewModel: ObservableObject {
             if currentScreen == .controller {
                 currentScreen = .connecting
                 autoConnect()
+            } else {
+                // Already on the connect screen: stop any lingering scan so a
+                // stale timer isn't fighting new connects (reduces WebKit churn).
+                cancelScanning()
             }
         case .connecting:
             break
@@ -257,6 +261,14 @@ final class MainViewModel: ObservableObject {
     }
 
     private func handleUDPDiscovery(_ sourceIP: String) {
+        // UDP listener callbacks run on a background queue; UI + manager state
+        // must be touched on the main thread to avoid SwiftUI crashes.
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.handleUDPDiscovery(sourceIP)
+            }
+            return
+        }
         if !discoveredPCs.contains(sourceIP) {
             discoveredPCs.append(sourceIP)
             addLog("Auto-found PC via UDP Broadcast: \(sourceIP)")
