@@ -1,84 +1,11 @@
 name: Build iOS (AIM-X Controller)
-
-# Builds the AIM-X iOS controller on a free macOS runner (this public repo =
-# free macOS minutes, no Mac of your own needed) and uploads the unsigned
-# .app + .xcarchive as artifacts. Sideload with Sideloadly / AltStore / your
-# own Developer cert afterwards.
-#
-# Real-device note: the controller talks to the cheat PC over LAN (TCP 1212 /
-# UDP 1213), which needs a REAL iPhone/iPad - the iOS Simulator cannot do
-# per-interface local networking. The unsigned build is meant for physical
-# device sideloading.
-
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: macos-14
-    timeout-minutes: 30
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Show toolchain
-        run: |
-          xcodebuild -version
-          swift --version
-
-      - name: Build unsigned .app (Release, device slice)
-        run: |
-          set -e
-          xcodebuild \
-            -project ios/AIMXController.xcodeproj \
-            -scheme AIMXController \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath ios/build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            build
-
-      - name: Archive unsigned .xcarchive
-        run: |
-          set -e
-          xcodebuild \
-            -project ios/AIMXController.xcodeproj \
-            -scheme AIMXController \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath ios/build \
-            -archivePath ios/build/AIMXController.xcarchive \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            archive
-
-      - name: Verify .app present
-        run: |
-          set -e
-          test -d ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
-          echo "OK: built .app is present"
-          ls -la ios/build/AIMXController.xcarchive/Products/Applications/
-
-      - name: Package unsigned .ipa (Payload method)
-        run: |
-          set -e
-          mkdir -p ios/ipa
-          cd ios/ipa
-          mkdir -p Payload
-          cp -R ../build/AIMXController.xcarchive/Products/Applications/AIMXController.app Payload/
-          zip -qr ../AIMXController-unsigned.ipa Payload
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: AIMXController-unsigned
-          path: |
-            ios/AIMXController-unsigned.ipa
-            ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
-          if-no-files-found: error
+      - name: hello
+        run: echo "runner alive"
