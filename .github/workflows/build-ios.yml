@@ -1,26 +1,15 @@
 name: Build iOS (AIM-X Controller)
 
-# Builds the AIM-X iOS controller on a free macOS runner and uploads the
-# resulting .ipa + .app as workflow artifacts. You do NOT need a Mac of your
-# own: GitHub hosts the macOS machine for you. The build is unsigned
-# (CODE_SIGNING_ALLOWED=NO), so you sideload it with Sideloadly / AltStore /
-# your own Developer cert afterwards.
-#
-# Real-device note: the controller talks to the cheat PC over local network
-# (TCP 1212 / UDP 1213), which requires a real iPhone/iPad — the iOS
-# Simulator cannot do per-interface local networking. The .ipa produced here
-# is meant for physical-device sideloading.
-
 on:
   push:
     branches: [ main, master ]
     paths:
       - "ios/**"
-  workflow_dispatch:   # allow manual "Run workflow" from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-14   # macOS 14 w/ Xcode 15.x, ram 7 GB, free for public/OSS
+    runs-on: macos-14
     timeout-minutes: 30
 
     steps:
@@ -32,14 +21,9 @@ jobs:
           xcodebuild -version
           swift --version
 
-      - name: Resolve instance ID (needed to snapshot for signing later if you add secrets)
-        run: echo "SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
-
-      - name: Show used Xcode SDK
-        run: xcodebuild -showsdks | grep -i iphoneos
-
-      - name: Build unsigned .app (Release, device slice)
+      - name: Build unsigned app (Release, device slice)
         run: |
+          set -e
           xcodebuild \
             -project ios/AIMXController.xcodeproj \
             -scheme AIMXController \
@@ -51,26 +35,9 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Package unsigned .ipa via xcodebuild archive + export
+      - name: Archive for later signing
         run: |
           set -e
-          mkdir -p ios/ipa/export
-          cat > ios/ipa/exportOptions.plist <<'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>method</key>
-  <string>development</string>
-  <key>signingStyle</key>
-  <string>manual</string>
-  <key>signingCertificate</key>
-  <string>-</string>
-  <key>stripSwiftSymbols</key>
-  <true/>
-</dict>
-</plist>
-EOF
           xcodebuild \
             -project ios/AIMXController.xcodeproj \
             -scheme AIMXController \
@@ -80,19 +47,20 @@ EOF
             -archivePath ios/build/AIMXController.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
             archive
 
-      - name: Upload .ipa artifact
+      - name: Verify built app exists
+        run: |
+          set -e
+          test -d ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
+          echo "OK: built .app is present"
+
+      - name: Upload unsigned artifact
         uses: actions/upload-artifact@v4
         with:
           name: AIMXController-unsigned
           path: |
             ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
+            ios/build/AIMXController.xcarchive
           if-no-files-found: error
-
-      - name: Summary
-        run: |
-          echo "## Build finished" 
-          echo "- Artifact \`AIMXController-unsigned\` carries the built \`.app\` and \`.xcarchive\`."
-          echo "- Sideload with Sideloadly/AltStore (bring your own Apple ID), or sign in Xcode with your team."
-          echo "  - The full archive is at \`ios/build/AIMXController.xcarchive\` for signing with a \`development\` profile."
