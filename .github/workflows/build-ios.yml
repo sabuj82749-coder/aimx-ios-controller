@@ -3,9 +3,54 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: macos-14
     steps:
-      - name: hello
-        run: echo "runner alive"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build unsigned device slice
+        run: |
+          xcodebuild \
+            -project ios/AIMXController.xcodeproj \
+            -scheme AIMXController \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath ios/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Archive
+        run: |
+          xcodebuild \
+            -project ios/AIMXController.xcodeproj \
+            -scheme AIMXController \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath ios/build \
+            -archivePath ios/build/AIMXController.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            archive
+
+      - name: Package unsigned .ipa
+        run: |
+          APP_DIR="ios/build/AIMXController.xcarchive/Products/Applications"
+          APP="AIMXController.app"
+          test -d "$APP_DIR/$APP" || exit 1
+          mkdir -p ios/dist/Payload
+          cp -R "$APP_DIR/$APP" ios/dist/Payload/
+          cd ios/dist
+          zip -qry ../AIMXController-unsigned.ipa Payload
+          cd ../..
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AIMXController-unsigned-ipa
+          path: ios/AIMXController-unsigned.ipa
+          if-no-files-found: error
