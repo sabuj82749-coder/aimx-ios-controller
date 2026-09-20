@@ -1,10 +1,18 @@
 name: Build iOS (AIM-X Controller)
 
+# Builds the AIM-X iOS controller on a free macOS runner (this public repo =
+# free macOS minutes, no Mac of your own needed) and uploads the unsigned
+# .app + .xcarchive as artifacts. Sideload with Sideloadly / AltStore / your
+# own Developer cert afterwards.
+#
+# Real-device note: the controller talks to the cheat PC over LAN (TCP 1212 /
+# UDP 1213), which needs a REAL iPhone/iPad - the iOS Simulator cannot do
+# per-interface local networking. The unsigned build is meant for physical
+# device sideloading.
+
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - "ios/**"
   workflow_dispatch:
 
 jobs:
@@ -21,7 +29,7 @@ jobs:
           xcodebuild -version
           swift --version
 
-      - name: Build unsigned app (Release, device slice)
+      - name: Build unsigned .app (Release, device slice)
         run: |
           set -e
           xcodebuild \
@@ -35,7 +43,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Archive for later signing
+      - name: Archive unsigned .xcarchive
         run: |
           set -e
           xcodebuild \
@@ -50,17 +58,27 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             archive
 
-      - name: Verify built app exists
+      - name: Verify .app present
         run: |
           set -e
           test -d ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
           echo "OK: built .app is present"
+          ls -la ios/build/AIMXController.xcarchive/Products/Applications/
 
-      - name: Upload unsigned artifact
+      - name: Package unsigned .ipa (Payload method)
+        run: |
+          set -e
+          mkdir -p ios/ipa
+          cd ios/ipa
+          mkdir -p Payload
+          cp -R ../build/AIMXController.xcarchive/Products/Applications/AIMXController.app Payload/
+          zip -qr ../AIMXController-unsigned.ipa Payload
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: AIMXController-unsigned
           path: |
+            ios/AIMXController-unsigned.ipa
             ios/build/AIMXController.xcarchive/Products/Applications/AIMXController.app
-            ios/build/AIMXController.xcarchive
           if-no-files-found: error
