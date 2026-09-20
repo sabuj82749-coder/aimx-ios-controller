@@ -24,6 +24,7 @@ final class MainViewModel: ObservableObject {
     private let connectionManager = PCConnectionManager()
     private let scanner = LANScanner()
     private let udpListener = UDPBroadcastListener()
+    private var foregroundObserver: NSObjectProtocol?
 
     init() {
         connectionManager.onLog = { [weak self] message in
@@ -38,11 +39,30 @@ final class MainViewModel: ObservableObject {
         }
 
         udpListener.start()
+
+        // On iOS the Local Network permission may be granted *after* the first
+        // (blocked) scan. Re-trigger discovery whenever the app returns from
+        // background / Settings so a freshly granted permission takes effect.
+        foregroundObserver = NotificationCenter.default.addObserver(
+            forName: .aimxDidEnterForeground,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            if self.connectionState != .connected {
+                self.addLog("App foreground - restarting discovery...")
+                self.autoConnect()
+            }
+        }
+
         // Auto-connect on startup — no login needed (same as Android bypass mode).
         autoConnect()
     }
 
     deinit {
+        if let foregroundObserver = foregroundObserver {
+            NotificationCenter.default.removeObserver(foregroundObserver)
+        }
         udpListener.stop()
         connectionManager.disconnect()
         scanner.cancel()
@@ -141,7 +161,12 @@ final class MainViewModel: ObservableObject {
     // MARK: - Discovery
 
     func runLanDiscovery() {
-        if isScanning { return }
+        if isScanning {
+            // A previous scan may still be stuck (e.g. iOS Local Network prompt
+            // unresolved). Cancel it so a user retry always starts fresh.
+            scanner.cancel()
+            isScanning = false
+        }
         guard let localIP = getLocalIpAddress() else {
             addLog("Lan discovery failed: Wi-Fi offline or local IP unavailable")
             isScanning = false

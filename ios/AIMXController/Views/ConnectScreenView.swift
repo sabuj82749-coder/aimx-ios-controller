@@ -15,6 +15,7 @@ struct ConnectScreenView: View {
     private let accentRed = Color(red: 0.906, green: 0.298, blue: 0.298)   // #E74C4C
 
     @State private var pulse = false
+    @State private var manualIP: String = ""
 
     private var isActive: Bool {
         viewModel.isScanning || viewModel.connectionState == .connecting
@@ -149,6 +150,42 @@ struct ConnectScreenView: View {
                     }
 
                     if !isActive {
+                        HStack(spacing: 8) {
+                            TextField("PC IP (e.g. 192.168.1.10)", text: $manualIP)
+                                .font(.system(size: 12, design: .monospaced))
+                                .keyboardType(.numbersAndPunctuation)
+                                .autocorrectionDisabled()
+                                .textInputAutocapitalization(.never)
+                                .padding(.horizontal, 14)
+                                .frame(height: 46)
+                                .background(glassSurface)
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .stroke(accent.opacity(0.3), lineWidth: 1)
+                                )
+                            Button(action: {
+                                let trimmed = manualIP.trimmingCharacters(in: .whitespacesAndNewlines)
+                                guard !trimmed.isEmpty else { return }
+                                viewModel.setPcIp(trimmed)
+                                viewModel.toggleConnection()
+                            }) {
+                                Text("CONNECT")
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .fontWeight(.bold)
+                                    .tracking(1.5)
+                                    .foregroundColor(.white)
+                                    .frame(height: 46)
+                                    .padding(.horizontal, 16)
+                                    .background(
+                                        LinearGradient(colors: [accent, accentViolet], startPoint: .leading, endPoint: .trailing)
+                                    )
+                                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(manualIP.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        }
+
                         Button(action: { viewModel.runLanDiscovery() }) {
                             Text("RETRY SCAN")
                                 .font(.system(size: 12, design: .monospaced))
@@ -221,7 +258,7 @@ struct ConnectScreenView: View {
             Divider().background(hairline)
             Text(isActive
                  ? "Scanning network..."
-                 : "Make sure both devices are on the same Wi-Fi.")
+                 : "Check: same Wi-Fi, and iOS Settings > Privacy > Local Network allows AIM-X Controller. Or type your PC IP above.")
                 .font(.system(size: 10))
                 .foregroundColor(textDim)
                 .lineSpacing(5)
