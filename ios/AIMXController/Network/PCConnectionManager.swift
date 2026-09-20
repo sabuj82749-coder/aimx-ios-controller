@@ -69,9 +69,12 @@ final class PCConnectionManager {
             case .ready:
                 self.connectTimeoutWork?.cancel()
                 self.setReady()
-            case .failed(let error), .cancelled(let error):
+            case .failed(let error):
                 guard self.connectionState != .disconnected else { return }
                 self.teardownAndReconnect(errorDescription: error.localizedDescription)
+            case .cancelled:
+                guard self.connectionState != .disconnected else { return }
+                self.teardownAndReconnect(errorDescription: "Cancelled")
             default:
                 break
             }
