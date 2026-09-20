@@ -44,7 +44,7 @@ final class LANScanner {
         }
 
         scanQueue.async { [weak self] in
-            self?.scanRange(prefix: prefix, port: port, onFound: onFound, onLog: onLog)
+            self?.scanRange(prefix: prefix, port: port, onFound: onFound, onScanChange: onScanChange, onLog: onLog)
         }
         return true
     }
@@ -57,7 +57,7 @@ final class LANScanner {
 
     // MARK: - Scanning
 
-    private func scanRange(prefix: String, port: Int, onFound: @escaping (String) -> Void, onLog: @escaping (String) -> Void) {
+    private func scanRange(prefix: String, port: Int, onFound: @escaping (String) -> Void, onScanChange: @escaping (_ scanning: Bool) -> Void, onLog: @escaping (String) -> Void) {
         let range = Array(1...254)
         var foundHosts: [String] = []
         let chunks = stride(from: 0, to: range.count, by: 25).map { Array(range[$0..<min($0 + 25, range.count)]) }
@@ -137,7 +137,8 @@ final class LANScanner {
 
         func sockaddrPointer(_ addr: UnsafeMutablePointer<addrinfo>) -> UnsafePointer<sockaddr>? {
             guard let ai_addr = addr.pointee.ai_addr else { return nil }
-            return ai_addr.withMemoryRebound(to: sockaddr.self, capacity: 1) { $0 }
+            let immutable = UnsafePointer(ai_addr)
+            return immutable.withMemoryRebound(to: sockaddr.self, capacity: 1) { $0 }
         }
 
         var addrIter: UnsafeMutablePointer<addrinfo>? = addrs

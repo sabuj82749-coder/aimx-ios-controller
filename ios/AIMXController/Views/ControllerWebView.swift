@@ -38,7 +38,9 @@ struct ControllerWebView: UIViewRepresentable {
         webView.scrollView.bounces = false
         webView.isOpaque = false
         webView.backgroundColor = .clear
-        webView.isInspectable = true
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        }
 
         bridge.webView = webView
 

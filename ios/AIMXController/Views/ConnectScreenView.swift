@@ -3,6 +3,7 @@ import SwiftUI
 /// SwiftUI port of Android `NativeConnectPcScreen` (MainActivity.kt:1212).
 struct ConnectScreenView: View {
     @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var bridge: WebBridgeController
 
     private let accent = Color(red: 0.357, green: 0.431, blue: 0.961)      // #5B6EF5
     private let accentDim = Color(red: 0.545, green: 0.608, blue: 0.969)   // #8B9BF7

@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftUI
 
 /// Companion controller state, mirroring Android `MainViewModel` in MainActivity.kt.
 final class MainViewModel: ObservableObject {
@@ -17,6 +18,8 @@ final class MainViewModel: ObservableObject {
         "collider": "",
         "sniper": ""
     ]
+    @Published var safeAreaTop: CGFloat = 0
+    @Published var safeAreaBottom: CGFloat = 0
 
     private let connectionManager = PCConnectionManager()
     private let scanner = LANScanner()
@@ -239,7 +242,7 @@ final class MainViewModel: ObservableObject {
         }
     }
 
-    private func autoConnect() {
+    func autoConnect() {
         if connectionState == .connected { return }
         addLog("Auto-connecting to cheat PC...")
         runLanDiscovery()

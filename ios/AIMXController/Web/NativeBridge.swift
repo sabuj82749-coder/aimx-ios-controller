@@ -1,10 +1,11 @@
 import Foundation
 import WebKit
+import SwiftUI
 
 /// Shared native<->JS bridge used by both the WebView and SwiftUI.
 /// Mirrors the Android `AndroidBridge` JavascriptInterface and the native->JS
 /// `window.*` calls from MainActivity.kt.
-final class WebBridgeController: NSObject {
+final class WebBridgeController: NSObject, ObservableObject {
     weak var webView: WKWebView?
 
     func evaluate(_ javaScript: String) {

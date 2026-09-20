@@ -59,7 +59,7 @@ final class PCConnectionManager {
         let connection = NWConnection(
             host: NWEndpoint.Host(ip),
             port: NWEndpoint.Port(rawValue: PCConnectionManager.tcpPort) ?? NWEndpoint.Port(rawValue: 1212)!,
-            using: .tcpWithNoDelay
+            using: .tcpWithNoDelay()
         )
         self.connection = connection
 
@@ -168,7 +168,7 @@ final class PCConnectionManager {
                 }
                 return
             }
-            if self.connection == connection {
+            if self.connection === connection {
                 self.receiveLoop(connection: connection)
             }
         }

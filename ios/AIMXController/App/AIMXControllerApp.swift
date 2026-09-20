@@ -30,3 +30,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         NotificationCenter.default.post(name: .aimxDidEnterForeground, object: nil)
     }
 }
+
+extension Notification.Name {
+    static let aimxDidEnterForeground = Notification.Name("AIMXDidEnterForeground")
+}
