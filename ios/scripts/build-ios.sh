@@ -6,7 +6,7 @@ set -euo pipefail
 
 IOS_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PROJ="$IOS_DIR/AIMXController.xcodeproj"
-SCHEME="AIMXController"
+SCHEME="AimXController"
 BUILD="$IOS_DIR/build"
 
 echo "==> Building unsigned Release device slice"
@@ -33,6 +33,6 @@ xcodebuild \
   CODE_SIGNING_REQUIRED=NO \
   archive
 
-APP="$BUILD/AIMXController.xcarchive/Products/Applications/AIMXController.app"
+APP="$BUILD/AIMXController.xcarchive/Products/Applications/AimXController.app"
 echo "==> Done. Built app: $APP"
 test -d "$APP" && echo "OK: app present."
